@@ -1,0 +1,2 @@
+[MASTER]
+init-hook='import sys; sys.path.append("/Users/jonas/Documents/reps/numpy_sdfs")'
