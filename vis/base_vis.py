@@ -16,7 +16,7 @@ def grid_to_pseudcolors(tpms_grid):
     return pseudocoloring(vis_grid)
 
 def pseudocoloring(img):
-    img = cv.applyColorMap(img, cv.COLORMAP_OCEAN)
+    img = cv.applyColorMap(img, cv.COLORMAP_TWILIGHT)
     return img
 
 def vis_image_key_press(ndarray, name = 'key_press_vis'):
