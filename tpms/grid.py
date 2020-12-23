@@ -7,6 +7,9 @@ class TPMSGrid:
         self.grid = np.zeros(shape = (x_dim, y_dim), dtype = np.float )
         self.idx_grid = np.indices( (self.x_dim, self.y_dim), dtype = np.float )
 
+    def clone(self):
+        return TPMSGrid(self.x_dim, self.y_dim)
+
     def __repr__(self):
         return "TPMSGrid with dimensions {} x {}".format(self.x_dim, self.y_dim)
 
