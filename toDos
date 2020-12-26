@@ -1,0 +1,27 @@
+- Distance Functions
+    • fix line
+    • rectange / cube
+    • circle / sphere √
+    • ellipse / ellipsoid
+    • extra tpms'es (see Bernhard code)
+        * 
+        * 
+
+- Latice Objects (mod based)
+    • 
+
+- Polar Distance Functions
+    • 
+
+- Boolean Operations
+    • intersect
+    • difference
+    • union
+
+- Rendering
+    • variable idx_grid
+        * transformation
+    • variable scale
+    • variable max_value
+
+- 3-6 Space Filling

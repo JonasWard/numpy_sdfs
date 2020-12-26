@@ -21,7 +21,7 @@ def video_output_grid_pseudocoloring(tpms_grid, tpms_f, z_vals = [.1, .2, .3, .4
     out = cv.VideoWriter(name, cv.VideoWriter_fourcc(*'MP4V'), 10, (tpms_grid.y_dim, tpms_grid.x_dim) )
     for z in z_vals:
         loc_grid = tpms_grid.clone()
-        tpms_f.apply(loc_grid, z)
+        tpms_f.apply_grid(loc_grid, z)
         frame = grid_to_pseudcolors(loc_grid)
         # vis_image_key_press(frame)
         out.write(frame)

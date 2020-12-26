@@ -8,8 +8,15 @@ def grid_to_pseudcolors(tpms_grid):
 
     print("max : {}, min : {}, delta : {}".format(max_val, min_val, delta) )
 
+    # fix delta = 0.0
+    if delta == 0.0:
+        multiplier = 1.0
+        print("[DEBUG] - value range is 0")
+    else:
+        multiplier = 255.0 / delta
+
     vis_grid = tpms_grid.grid - min_val
-    vis_grid *= 255.0 / delta
+    vis_grid *= multiplier
 
     vis_grid = vis_grid.astype(np.uint8)
 
