@@ -25,7 +25,7 @@ def video_output_grid_pseudocoloring(tpms_grid, tpms_f, z_vals = [.1, .2, .3, .4
     for z in z_vals:
         loc_grid = tpms_grid.clone()
         tpms_f.apply_grid(loc_grid, z)
-        frame = grid_to_pseudcolors(loc_grid)
+        frame = grid_to_pseudcolors_rounded(loc_grid)
         # vis_image_key_press(frame)
         out.write(frame)
     out.release()

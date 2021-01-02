@@ -1,6 +1,9 @@
 import numpy as np
 import cv2 as cv
 import math
+import vis.colormap as cm
+
+color_map = cm.color_d["OCEAN"]
 
 def grid_to_pseudcolors(tpms_grid):
     max_val = np.max(tpms_grid.grid)
@@ -61,7 +64,8 @@ def grid_to_pseudcolors_rounded(tpms_grid, values = 6):
     return pseudocoloring(vis_grid)
 
 def pseudocoloring(img):
-    img = cv.applyColorMap(img, cv.COLORMAP_JET)
+    global color_map
+    img = cv.applyColorMap(img, color_map)
     return img
 
 def vis_image_key_press(ndarray, name = 'key_press_vis'):

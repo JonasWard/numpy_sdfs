@@ -1,5 +1,5 @@
 from data.grid import TPMSGrid
-from vis.grid import vis_grid, vis_grid_idx, vis_grid_pseudocolors, video_output_grid_pseudocoloring
+from vis.grid import *
 from functions.tpms import *
 import math
 
@@ -27,11 +27,12 @@ gyroid2.apply_grid(grid2, .2)
 gyroid = Gyroid(grid3.grid, 1.0, 1.0)
 gyroid.apply_grid(grid, 0)
 # vis_grid(grid)
-# vis_grid_pseudocolors(grid)
+# vis_grid_pseudocolors(grid) s
+# vis_grid_pseudocolors_rounded(grid, 9)
 z_vals = [(math.cos(z * math.pi / 100.0) + 1) * 500 for z in range(200)]
 
 # print(z_vals)
-video_output_grid_pseudocoloring(grid, gyroid, z_vals, "gyroid_3_loop_5.mp4")
+video_output_grid_pseudocoloring(grid, gyroid, z_vals, "gyroid_3_integers.mp4")
 # print(grid.grid)
 
 # ToDo: json saving configuration of different tpmses, grid and pseudocolor map 
