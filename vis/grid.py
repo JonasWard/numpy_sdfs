@@ -1,12 +1,15 @@
 import numpy as np
 import cv2 as cv
-from vis.base_vis import vis_image_key_press, pseudocoloring, grid_to_pseudcolors
+from vis.base_vis import vis_image_key_press, pseudocoloring, grid_to_pseudcolors, grid_to_pseudcolors_rounded
 
 def vis_grid(tpms_grid):
     vis_image_key_press(tpms_grid.grid, "tpms_grid")
 
 def vis_grid_pseudocolors(tpms_grid):
     vis_image_key_press(grid_to_pseudcolors(tpms_grid), "tpms_grid")
+
+def vis_grid_pseudocolors_rounded(tmps_grid, values = 6):
+    vis_image_key_press(grid_to_pseudcolors_rounded(tmps_grid, values), "tpms_grid")
 
 def vis_grid_idx(tpms_grid):
     vis_array = np.zeros( (tpms_grid.x_dim, tpms_grid.y_dim), dtype = np.float)
