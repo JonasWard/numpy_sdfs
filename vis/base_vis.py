@@ -33,8 +33,11 @@ def grid_to_pseudcolors(tpms_grid):
     return pseudocoloring(vis_grid)
 
 def grid_to_pseudcolors_rounded(tpms_grid, values = 6):
-    max_val = np.max(tpms_grid.grid)
-    min_val = np.min(tpms_grid.grid)
+    return array_to_pseudcolors_rounded(tpms_grid.grid, values)
+
+def array_to_pseudcolors_rounded(array, values = 6):
+    max_val = np.max(array)
+    min_val = np.min(array)
     delta = max_val - min_val
 
     print("max : {}, min : {}, delta : {}".format(max_val, min_val, delta) )
@@ -46,9 +49,9 @@ def grid_to_pseudcolors_rounded(tpms_grid, values = 6):
     else:
         multiplier = values / (delta)
 
-    print(tpms_grid.grid)
+    print(array)
 
-    vis_grid = tpms_grid.grid - min_val
+    vis_grid = array - min_val
     vis_grid *= multiplier
 
     vis_grid = vis_grid.astype(np.uint8)
