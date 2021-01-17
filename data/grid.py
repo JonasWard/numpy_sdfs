@@ -36,6 +36,14 @@ class TPMSGrid:
 
         print("grid updated")
 
+    def get_domain(self):
+        return np.min(self.grid), np.max(self.grid), np.mean(self.grid), np.median(self.grid)
+
+    def binary_slice_at(self, value):
+        n_grid = self.clone()
+        n_grid.grid = np.less_equal(self.grid, value).astype(np.uint8) * 255.
+        return n_grid
+
     def clone(self):
         return TPMSGrid(self.x_dim, self.y_dim, self.idx_grid)
 
