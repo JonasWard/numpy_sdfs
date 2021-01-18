@@ -1,3 +1,4 @@
 {
-    "python.linting.pylintEnabled": true
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": "/Users/jonas/opt/anaconda3/envs/sdfs/bin/python"
 }
