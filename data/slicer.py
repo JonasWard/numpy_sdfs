@@ -19,7 +19,7 @@ edge_mapper = {
     15:[]
 }
 
-vertex_mapper = {
+edge_2_vertex_mapper = {
     0: [0, 1],
     1: [1, 2],
     2: [3, 2],
@@ -35,8 +35,8 @@ def calculate_vertexes(cell_values, cell_type, b_pt):
         n_pair = []
 
         for e_idx in e_s:
-            v_idx_a = vertex_mapper[e_idx][0]
-            v_idx_b = vertex_mapper[e_idx][1]
+            v_idx_a = edge_2_vertex_mapper[e_idx][0]
+            v_idx_b = edge_2_vertex_mapper[e_idx][1]
 
             v = interpolate_edge(
                 cell_values[v_idx_a],
@@ -46,12 +46,12 @@ def calculate_vertexes(cell_values, cell_type, b_pt):
             if e_idx % 2 == 0:
                 n_pair.append([
                     b_pt[0],
-                    b_pt[1] + v
+                    b_pt[1] + .5
                 ])
 
             else:
                 n_pair.append([
-                    b_pt[0] + v,
+                    b_pt[0] + .5,
                     b_pt[1]
                 ])
 
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     import math
 
     # x_dim, y_dim = 1280, 720
-    x_dim, y_dim = 1000, 1000
+    x_dim, y_dim = 5, 5
 
     translation = .5, .5
     rotation = 0.
@@ -123,9 +123,10 @@ if __name__ == "__main__":
 
     grid3 = TPMSGrid(x_dim, y_dim)
     grid3.transform_idx_grid(rotation, translation)
-    gyroid3 = FischerKoch(50.0, 4.0, 50.0)
+    gyroid3 = FischerKoch(1.0, 1.0, .5)
     gyroid3.apply_grid(grid3, .5)
 
+    vis_grid(grid3)
     # n_grid = binary_grid(grid3, 50.0)
 
     print(line_list_slice(grid3, 50.) )
