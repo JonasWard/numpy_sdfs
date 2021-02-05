@@ -4,7 +4,7 @@ from functions.tpms import *
 import math
 
 # x_dim, y_dim = 1280, 720
-x_dim, y_dim = 1000, 1000
+x_dim, y_dim = 10000, 10000
 
 translation = .5, .5
 rotation = 0.
@@ -28,11 +28,11 @@ gyroid = Gyroid(grid3.grid, 1.0, 1.0)
 gyroid.apply_grid(grid, 0)
 # vis_grid(grid)
 # vis_grid_pseudocolors(grid) s
-# vis_grid_pseudocolors_rounded(grid, 9)
-z_vals = [(math.cos(z * math.pi / 100.0) + 1) * 500 for z in range(200)]
+vis_grid_pseudocolors_rounded(grid, 2)
+# z_vals = [(math.cos(z * math.pi / 100.0) + 1) * 500 for z in range(200)]
 
 # print(z_vals)
-video_output_grid_pseudocoloring(grid, gyroid, z_vals, "gyroid_3_integers.mp4")
+# video_output_grid_pseudocoloring(grid, gyroid, z_vals, "gyroid_3_integers.mp4")
 # print(grid.grid)
 
 # ToDo: json saving configuration of different tpmses, grid and pseudocolor map 

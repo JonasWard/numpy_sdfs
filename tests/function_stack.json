@@ -1,0 +1,12 @@
+{
+    "type" : "plus",
+    "data" : [ 
+        {
+            "type" : "sin",
+            "data" : 1.0
+        }, {
+            "type" : "cos",
+            "data" : 1.0
+        }
+    ]
+}
