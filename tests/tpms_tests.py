@@ -16,7 +16,8 @@ grid.transform_idx_grid(rotation, translation)
 
 grid3 = TPMSGrid(x_dim, y_dim)
 grid3.transform_idx_grid(rotation, translation)
-gyroid3 = FischerKoch(50.0, 4.0, 50.0)
+gyroid3 = 
+(50.0, 4.0, 50.0)
 gyroid3.apply_grid(grid3, .5)
 
 grid2 = TPMSGrid(x_dim, y_dim)
