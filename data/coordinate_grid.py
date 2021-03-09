@@ -30,3 +30,15 @@ class CoordinateGrid():
 
     def uv_map(self, uv_map_function):
         self.x, self.y, self.z = uv_map_function.map(self.x, self.y, self.z)
+
+    def visualizeX(self):
+
+    def visualizeY(self):
+
+    def visualizeZ(self):
+
+    def visualizeXY(self):
+
+    def visualizeXZ(self):
+
+    def visualizeYZ(self):
