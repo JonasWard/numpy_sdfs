@@ -1,14 +1,15 @@
 import numpy as np
 
 class TPMSGrid:
-    def __init__(self, x_dim, y_dim, index_grid = None):
+    def __init__(self, x_dim, y_dim, z_value=0., index_grid=None):
         self.x_dim = int(x_dim)
         self.y_dim = int(y_dim)
         self.grid = np.zeros(shape = (x_dim, y_dim), dtype = np.float )
 
         if index_grid is None:
             self._idx_grid_state = "default"
-            self.idx_grid = np.indices( (self.x_dim, self.y_dim), dtype = np.float )
+            self.idx_grid=[np_a for np_a in np.indices( (self.x_dim, self.y_dim), dtype = np.float )]
+            self.idx_grid+=[np.ones((self.x_dim, self.y_dim), dtype=np.float)*z_value]
         else:
             self._idx_grid_state = "cloned"
             self.idx_grid = index_grid
