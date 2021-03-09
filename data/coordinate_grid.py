@@ -16,8 +16,7 @@ class CoordinateGrid():
         self.x-=b_pt[0]
         self.y-=b_pt[1]
 
-        c = np.cos(angle)
-        s = np.sin(angle)
+        c,s = np.cos(angle), np.sin(angle)
 
         self.x, self.y = ( self.x * c - self.y * s ), ( self.x * s + self.y * c )
         
