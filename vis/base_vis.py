@@ -35,36 +35,48 @@ def grid_to_pseudcolors(tpms_grid):
 def grid_to_pseudcolors_rounded(tpms_grid, values = 6):
     return array_to_pseudcolors_rounded(tpms_grid.grid, values)
 
-def array_to_pseudcolors_rounded(array, values = 6):
+def array_prop(array):
     max_val = np.max(array)
     min_val = np.min(array)
     delta = max_val - min_val
 
-    print("max : {}, min : {}, delta : {}".format(max_val, min_val, delta) )
+    return max_val, min_val, delta
 
-    # fix delta = 0.0
-    if delta == 0.0:
-        multiplier = 1.0
-        print("[DEBUG] - value range is 0")
+def array_to_unit_interval(array):
+    max_val, min_val, delta = array_prop(array)
+
+    if delta != 0.:
+        vis_grid = array - min_val
+        vis_grid /= delta
     else:
-        multiplier = values / (delta)
+        print("when converting to interval gradient grid, found no delta!, just a gray one!")
+        vis_grid=np.ones(array.shape, dtype=float)*.5
 
-    print(array)
+    return vis_grid
 
-    vis_grid = array - min_val
-    vis_grid *= multiplier
+def array_to_stepped_unit_interval(array, steps=8):
+    max_val, min_val, delta = array_prop(array)
 
-    vis_grid = vis_grid.astype(np.uint8)
+    steps *= 1.
 
-    vis_grid *= math.floor(255.0 / values)
+    if delta != 0.:
+        vis_grid = array - min_val
+        vis_grid /= delta
+        vis_grid *= steps
+        vis_grid = vis_grid.astype(np.uint8).astype(float)
+        vis_grid /=steps
+    else:
+        print("when converting to interval gradient grid, found no delta!, just a gray one!")
+        vis_grid=np.ones(array.shape, dtype=float)*.5
 
-    max_val = np.max(vis_grid)
-    min_val = np.min(vis_grid)
-    delta = max_val - min_val
+    return vis_grid
 
-    print("REGRADED - max : {}, min : {}, delta : {}".format(max_val, min_val, delta) )
+def array_to_pseudcolors_rounded(array, values = 6):
+    array = array_to_stepped_unit_interval(array, values)
+    array *= 255.
+    array=array.astype(np.int8)
     
-    return pseudocoloring(vis_grid)
+    return pseudocoloring(array)
 
 def pseudocoloring(img):
     global color_map
