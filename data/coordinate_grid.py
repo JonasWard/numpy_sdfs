@@ -1,5 +1,5 @@
 import numpy as np
-from vis.base_vis import vis_image_key_press, array_to_pseudocolor_range
+from vis.base_vis import vis_image_key_press, array_to_pseudocolor_range, merge_channels
 
 class CoordinateGrid():
     def __init__(self, x_dim, y_dim, z_value=0.):
@@ -42,16 +42,17 @@ class CoordinateGrid():
         vis_image_key_press(array_to_pseudocolor_range(self.z))
 
     def visualizeXY(self):
-        pass
+        vis_image_key_press(merge_channels(self.x, self.y))
 
     def visualizeXZ(self):
-        pass
+        vis_image_key_press(merge_channels(self.x, 0., self.z))
 
     def visualizeYZ(self):
-        pass
+        vis_image_key_press(merge_channels(0., self.y, self.z))
 
     def visualizeXYZ(self):
-        pass
+        vis_image_key_press(merge_channels(self.x, self.y, self.z))
 
 if __name__ == "__main__":
     c_grid = CoordinateGrid(150, 150)
+    c_grid.visualizeXY()

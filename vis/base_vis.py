@@ -104,6 +104,9 @@ def vis_image_key_press(ndarray, name = 'key_press_vis'):
     cv.waitKey(0)
     cv.destroyAllWindows()
 
+def merge_channels(r=0.,g=0.,b=0.):
+    return cv.merge([b,g,r])
+
 if __name__ == "__main__":
     xs, ys = [np_a for np_a in np.indices( (100,100), dtype = np.float64 )]
 
