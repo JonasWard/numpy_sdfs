@@ -71,20 +71,21 @@ def array_to_stepped_unit_interval(array, steps=8):
 
     return vis_grid
 
+def array_to_uint8(array):
+    array = array_to_unit_interval(array)   
+    array *= 255.
+    return array.astype(np.uint8)
+
+def array_to_stepped_unit8(array, steps=8):
+    array = array_to_stepped_unit_interval(array, steps)
+    array *= 255.
+    return array.astype(np.uint8)
+
 def array_to_pseudocolor_range(array):
-    array = array_to_unit_interval(array)
-    array *= 255.
-    array=array.astype(np.uint8)
+    return pseudocoloring(array_to_uint8(array))
 
-    return pseudocoloring(array)
-
-def array_to_stepped_pseudecolor_range(array, values = 6):
-    array = array_to_stepped_unit_interval(array, values)
-    array *= 255.
-    # print(np.uint8)
-    array=array.astype(np.uint8)
-    
-    return pseudocoloring(array)
+def array_to_stepped_pseudecolor_range(array, steps = 6):
+    return pseudocoloring(array_to_stepped_unit8(array, steps))
 
 def pseudocoloring(img):
     global color_map
@@ -104,8 +105,32 @@ def vis_image_key_press(ndarray, name = 'key_press_vis'):
     cv.waitKey(0)
     cv.destroyAllWindows()
 
-def merge_channels(r=0.,g=0.,b=0.):
-    return cv.merge([b,g,r])
+def merge_channels(r=None,g=None,b=None):
+    bgr=[b,g,r]
+    if ((r is None and g is None) and b is None):
+        print("no channels defined, no channels returned")
+        return None
+    elif not((r is None or g is None) or b is None):
+        # meaning all channels are defined
+        pass
+    else:
+        for c in bgr:
+            if not(c is None):
+                zeros=np.zeros(c.shape, dtype=np.uint8)
+                break
+        cs=[]
+        for c in bgr:
+            if c is None:
+                cs.append(zeros)
+            else:
+                cs.append(c)
+        bgr=cs
+
+    bgr=[array_to_uint8(c) for c in bgr]
+
+    print(bgr)
+
+    return cv.merge(bgr)
 
 if __name__ == "__main__":
     xs, ys = [np_a for np_a in np.indices( (100,100), dtype = np.float64 )]

@@ -7,7 +7,7 @@ class CoordinateGrid():
         self.y_dim = y_dim
 
         self.x, self.y = [np_a for np_a in np.indices( (self.x_dim, self.y_dim), dtype = np.float64 )]
-        self.z = [np.ones((self.x_dim, self.y_dim), dtype=np.float64)*z_value]
+        self.z = np.ones((self.x_dim, self.y_dim), dtype=np.float64)*z_value
 
         #centralize
         self.x-=self.x_dim * .5
@@ -45,10 +45,10 @@ class CoordinateGrid():
         vis_image_key_press(merge_channels(self.x, self.y))
 
     def visualizeXZ(self):
-        vis_image_key_press(merge_channels(self.x, 0., self.z))
+        vis_image_key_press(merge_channels(self.x, None, self.z))
 
     def visualizeYZ(self):
-        vis_image_key_press(merge_channels(0., self.y, self.z))
+        vis_image_key_press(merge_channels(None, self.y, self.z))
 
     def visualizeXYZ(self):
         vis_image_key_press(merge_channels(self.x, self.y, self.z))
@@ -56,3 +56,6 @@ class CoordinateGrid():
 if __name__ == "__main__":
     c_grid = CoordinateGrid(150, 150)
     c_grid.visualizeXY()
+    c_grid.visualizeXZ()
+    c_grid.visualizeYZ()
+    c_grid.visualizeXYZ()
