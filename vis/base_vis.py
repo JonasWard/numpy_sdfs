@@ -50,7 +50,7 @@ def array_to_unit_interval(array):
         vis_grid /= delta
     else:
         print("when converting to interval gradient grid, found no delta!, just a gray one!")
-        vis_grid=np.ones(array.shape, dtype=float)*.5
+        vis_grid=np.ones(array.shape, dtype=np.float64)*.5
 
     return vis_grid
 
@@ -63,18 +63,26 @@ def array_to_stepped_unit_interval(array, steps=8):
         vis_grid = array - min_val
         vis_grid /= delta
         vis_grid *= steps
-        vis_grid = vis_grid.astype(np.uint8).astype(float)
+        vis_grid = vis_grid.astype(np.uint8).astype(np.float64)
         vis_grid /=steps
     else:
         print("when converting to interval gradient grid, found no delta!, just a gray one!")
-        vis_grid=np.ones(array.shape, dtype=float)*.5
+        vis_grid=np.ones(array.shape, dtype=np.float64)*.5
 
     return vis_grid
 
-def array_to_pseudcolors_rounded(array, values = 6):
+def array_to_pseudocolor_range(array):
+    array = array_to_unit_interval(array)
+    array *= 255.
+    array=array.astype(np.uint8)
+
+    return pseudocoloring(array)
+
+def array_to_stepped_pseudecolor_range(array, values = 6):
     array = array_to_stepped_unit_interval(array, values)
     array *= 255.
-    array=array.astype(np.int8)
+    # print(np.uint8)
+    array=array.astype(np.uint8)
     
     return pseudocoloring(array)
 
@@ -83,7 +91,26 @@ def pseudocoloring(img):
     img = cv.applyColorMap(img, color_map)
     return img
 
+def display_swapping(ndarray):
+    ndarray=cv.transpose(ndarray)
+    ndarray=cv.flip(ndarray, flipCode=1)
+
+    return ndarray
+
 def vis_image_key_press(ndarray, name = 'key_press_vis'):
+    ndarray=display_swapping(ndarray)
+
     cv.imshow(name, ndarray)
     cv.waitKey(0)
     cv.destroyAllWindows()
+
+if __name__ == "__main__":
+    xs, ys = [np_a for np_a in np.indices( (100,100), dtype = np.float64 )]
+
+    print(xs)
+    print(ys)
+    xs_array=array_to_pseudocolor_range(xs)
+    print(xs_array)
+
+    vis_image_key_press(xs_array)
+    vis_image_key_press(array_to_pseudocolor_range(ys))

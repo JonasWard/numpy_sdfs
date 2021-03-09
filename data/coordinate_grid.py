@@ -1,12 +1,13 @@
 import numpy as np
+from vis.base_vis import vis_image_key_press, array_to_pseudocolor_range
 
 class CoordinateGrid():
     def __init__(self, x_dim, y_dim, z_value=0.):
         self.x_dim = x_dim
         self.y_dim = y_dim
 
-        self.x, self.y = [np_a for np_a in np.indices( (self.x_dim, self.y_dim), dtype = np.float )]
-        self.z = [np.ones((self.x_dim, self.y_dim), dtype=np.float)*z_value]
+        self.x, self.y = [np_a for np_a in np.indices( (self.x_dim, self.y_dim), dtype = np.float64 )]
+        self.z = [np.ones((self.x_dim, self.y_dim), dtype=np.float64)*z_value]
 
         #centralize
         self.x-=self.x_dim * .5
@@ -32,13 +33,25 @@ class CoordinateGrid():
         self.x, self.y, self.z = uv_map_function.map(self.x, self.y, self.z)
 
     def visualizeX(self):
+        vis_image_key_press(array_to_pseudocolor_range(self.x))
 
     def visualizeY(self):
+        vis_image_key_press(array_to_pseudocolor_range(self.y))
 
     def visualizeZ(self):
+        vis_image_key_press(array_to_pseudocolor_range(self.z))
 
     def visualizeXY(self):
+        pass
 
     def visualizeXZ(self):
+        pass
 
     def visualizeYZ(self):
+        pass
+
+    def visualizeXYZ(self):
+        pass
+
+if __name__ == "__main__":
+    c_grid = CoordinateGrid(150, 150)
