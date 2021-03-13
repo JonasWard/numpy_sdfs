@@ -40,11 +40,16 @@ class CoordinateGrid():
         a, b, c = c2 * c3, - c2 * s3, s2
         d, e, f = c1*s3 + c3*s1*s2, c1*c3 - s1*s2*s3, - c2*s1
         g, h, i = s1*s3 - c1*c3*s2, c3*s1 + c1*s2*s3, c1*c2
+        
         self.x, self.y, self.z = (
             self.x * a + self.y * b + self.y * c,
             self.x * d + self.y * e + self.y * f,
             self.x * g + self.y * h + self.y * i
         )
+
+        self.x += d_x
+        self.y += d_y
+        self.z += d_z
 
     def translate(self, pt=(0,0,0)):
         self.x+=pt[0]

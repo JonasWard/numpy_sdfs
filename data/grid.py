@@ -29,8 +29,13 @@ class TPMSGrid:
 
         self.idx_grid.translate(pt=(self.x_dim*(.5*x_mul), self.x_dim*(.5*y_mul), 0.))
 
-    # def transform_idx_grid(self, rotation = .25 * np.pi, translation = (.5, 0.0) ):
-        
+    def transform_idx_grid(self, rotation = .25 * np.pi, translation = None ):
+        translation = (0,0,0) if translation is None else translation
+
+        if isinstance(rotation, float) or isinstance(rotation, int):
+            self.idx_grid.rotate_xy(b_pt=translation, angle=rotation)
+        elif isinstance(rotation, tuple):
+            self.idx_grid.rotate_angles(b_pt=translation, angles=rotation)
 
     def get_domain(self):
         return np.min(self.grid), np.max(self.grid), np.mean(self.grid), np.median(self.grid)
