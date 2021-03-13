@@ -15,6 +15,12 @@ class TPMSGrid:
             self._idx_grid_state = "cloned"
             self.idx_grid = index_grid
 
+        self._applied = False
+
+    @property
+    def applied(self):
+        return self._applied
+
     def shift_to_corner(self, corner="top_right"):
         if corner == "top_left":
             x_mul, y_mul = -1., -1.
@@ -37,6 +43,10 @@ class TPMSGrid:
         elif isinstance(rotation, tuple):
             self.idx_grid.rotate_angles(b_pt=translation, angles=rotation)
 
+    def apply_function(self, function):
+        self._applied = True
+        self.x, self.y, self.z = function.apply_grid(self)
+
     def get_domain(self):
         return np.min(self.grid), np.max(self.grid), np.mean(self.grid), np.median(self.grid)
 
@@ -47,6 +57,12 @@ class TPMSGrid:
 
     def clone(self):
         return TPMSGrid(self.x_dim, self.y_dim, self.idx_grid)
+
+    def get_values(self):
+        if self._applied:
+            return self.idx_grid.x, self.idx_grid.y, self.idx_grid.z
+        else:
+            return self.x, self.y, self.z
 
     def __repr__(self):
         return "TPMSGrid with dimensions {} x {}".format(self.x_dim, self.y_dim)
