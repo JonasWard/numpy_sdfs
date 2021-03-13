@@ -1,4 +1,5 @@
 import numpy as np
+from coordinate_grid import *
 
 class TPMSGrid:
     def __init__(self, x_dim, y_dim, z_value=0., index_grid=None):
@@ -8,34 +9,28 @@ class TPMSGrid:
 
         if index_grid is None:
             self._idx_grid_state = "default"
-            self.idx_grid=[np_a for np_a in np.indices( (self.x_dim, self.y_dim), dtype = np.float )]
-            self.idx_grid+=[np.ones((self.x_dim, self.y_dim), dtype=np.float)*z_value]
+            # by default the index grid is loaded in centrelized
+            self.idx_grid = CoordinateGrid(self.x_dim, self.y_dim, z_value)
         else:
             self._idx_grid_state = "cloned"
             self.idx_grid = index_grid
 
-    def transform_idx_grid(self, rotation = .25 * np.pi, translation = (.5, 0.0) ):
-        c = np.cos(rotation)
-        s = np.sin(rotation)
+    def shift_to_corner(self, corner="top_right"):
+        if corner == "top_left":
+            x_mul, y_mul = -1., -1.
+        elif corner == "top_right":
+            x_mul, y_mul = 1., -1.
+        elif corner == "bottom_right":
+            x_mul, y_mul = 1., 1.
+        elif corner == "bottom_left":
+            x_mul, y_mul = -1., 1.
+        else:
+            x_mul, y_mul = 0., 0.
 
-        x = translation[0] * self.x_dim
-        y = translation[1] * self.y_dim
+        self.idx_grid.translate(pt=(self.x_dim*(.5*x_mul), self.x_dim*(.5*y_mul), 0.))
 
-        print("translation : {}, {}".format(x, y) )
-        print("rotation    : {}, {}".format(c, s) )
-
-        idx_grid_dup = []
-        idx_grid_dup.append( self.idx_grid[0] * c - self.idx_grid[1] * s )
-        idx_grid_dup.append( self.idx_grid[0] * s + self.idx_grid[1] * c )
-
-        self.idx_grid = idx_grid_dup
-
-        self.idx_grid[0] -= x
-        self.idx_grid[1] -= y
-
-        self._idx_grid_state = "transformed"
-
-        print("grid updated")
+    # def transform_idx_grid(self, rotation = .25 * np.pi, translation = (.5, 0.0) ):
+        
 
     def get_domain(self):
         return np.min(self.grid), np.max(self.grid), np.mean(self.grid), np.median(self.grid)
