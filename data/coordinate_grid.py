@@ -24,6 +24,28 @@ class CoordinateGrid():
         self.x+=b_pt[0]
         self.y+=b_pt[1]
 
+    def rotate_angles(self, b_pt=(0,0,0), angles=(.5,0.,1.5)):
+        pitch, yaw, roll = angles
+        d_x, d_y, d_z = b_pt
+
+        c1, s1 = np.cos(pitch), np.sin(pitch)
+        c2, s2 = np.cos(yaw), np.sin(yaw)
+        c3, s3 = np.cos(roll), np.sin(roll)
+
+        self.x -= d_x
+        self.y -= d_y
+        self.z -= d_z
+
+        # Tait-Bryan angles XYZ
+        a, b, c = c2 * c3, - c2 * s3, s2
+        d, e, f = c1*s3 + c3*s1*s2, c1*c3 - s1*s2*s3, - c2*s1
+        g, h, i = s1*s3 - c1*c3*s2, c3*s1 + c1*s2*s3, c1*c2
+        self.x, self.y, self.z = (
+            self.x * a + self.y * b + self.y * c,
+            self.x * d + self.y * e + self.y * f,
+            self.x * g + self.y * h + self.y * i
+        )
+
     def translate(self, pt=(0,0,0)):
         self.x+=pt[0]
         self.y+=pt[1]
@@ -55,7 +77,9 @@ class CoordinateGrid():
 
 if __name__ == "__main__":
     c_grid = CoordinateGrid(150, 150)
-    c_grid.visualizeXY()
-    c_grid.visualizeXZ()
-    c_grid.visualizeYZ()
-    c_grid.visualizeXYZ()
+    c_grid.visualizeX()
+    c_grid.rotate_xy(angle=np.pi*.5)
+    c_grid.visualizeX()
+    # c_grid.visualizeXZ()
+    # c_grid.visualizeYZ()
+    # c_grid.visualizeXYZ()
