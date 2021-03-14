@@ -1,6 +1,5 @@
 import numpy as np
 from data.grid import TPMSGrid
-from vis.base_vis import vis_image_key_press, array_to_pseudocolor_range
 
 class TPMS:
     def __init__(self, scale_a, max_val, shift = 0.0):
@@ -30,7 +29,7 @@ class TPMS:
 
         if isinstance(self.s_a, TPMSGrid):
             s_d = self.s_a.grid
-            vis_image_key_press(array_to_pseudocolor_range(s_d))
+            
             _x*=s_d
             _y*=s_d
             _z*=s_d
