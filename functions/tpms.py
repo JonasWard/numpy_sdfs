@@ -1,5 +1,6 @@
 import numpy as np
 from data.grid import TPMSGrid
+from vis.base_vis import vis_image_key_press, array_to_pseudocolor_range
 
 class TPMS:
     def __init__(self, scale_a, max_val, shift = 0.0):
@@ -28,15 +29,16 @@ class TPMS:
         _x, _y, _z = tpms_grid.get_values()
 
         if isinstance(self.s_a, TPMSGrid):
-            s_x, s_y, s_z = self.s_a.get_values()
-            _x=_x/s_x
-            _y=_y/s_y
-            _z=_z/s_z
+            s_d = self.s_a.grid
+            vis_image_key_press(array_to_pseudocolor_range(s_d))
+            _x*=s_d
+            _y*=s_d
+            _z*=s_d
 
         else:
-            _x=_x/self.s_a
-            _y=_y/self.s_a
-            _z=_z/self.s_a        
+            _x*=self.s_a
+            _y*=self.s_a
+            _z*=self.s_a        
 
         return _x, _y, _z
 
@@ -60,6 +62,8 @@ class Gyroid(TPMS):
         
         self.assign_value(tpms_grid, ds)
 
+        return tpms_grid
+
 class SchwarzD(TPMS):
     def apply_grid(self, tpms_grid):
         _x, _y, _z = self.get_values(tpms_grid)
@@ -76,6 +80,8 @@ class SchwarzD(TPMS):
         
         self.assign_value(tpms_grid, ds)
 
+        return tpms_grid
+
 class SchwarzP(TPMS):
     def apply_grid(self, tpms_grid):
         _x, _y, _z = self.get_values(tpms_grid)
@@ -85,6 +91,8 @@ class SchwarzP(TPMS):
         ds = c_x + c_y + c_z
         
         self.assign_value(tpms_grid, ds)
+
+        return tpms_grid
 
 class Neovius(TPMS):
     def apply_grid(self, tpms_grid):
@@ -98,6 +106,8 @@ class Neovius(TPMS):
         )
         
         self.assign_value(tpms_grid, ds)
+
+        return tpms_grid
 
 class FischerKoch(TPMS):
     def apply_grid(self, tpms_grid):
@@ -114,3 +124,5 @@ class FischerKoch(TPMS):
         )
         
         self.assign_value(tpms_grid, ds)
+
+        return tpms_grid
