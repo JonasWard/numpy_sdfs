@@ -1,17 +1,11 @@
 import numpy as np
+from data.grid import TPMSGrid
 
 class TPMS:
     def __init__(self, scale_a, max_val, shift = 0.0):
         self.s_a = scale_a
         self.m_v = max_val
         self.s = shift
-
-    def get_idx_grid(self, tpms_grid, z):
-        _x = tpms_grid.idx_grid[0] / self.s_a
-        _y = tpms_grid.idx_grid[1] / self.s_a
-        _z = z / self.s_a
-
-        return _x, _y, _z
 
     def get_sin(self, *args):
         output = []
@@ -30,9 +24,30 @@ class TPMS:
         ds += self.s
         grid.grid += ds
 
+    def get_values(self, tpms_grid):
+        _x, _y, _z = tpms_grid.get_values()
+
+        if isinstance(self.s_a, TPMSGrid):
+            s_x, s_y, s_z = self.s_a.get_values()
+            _x=_x/s_x
+            _y=_y/s_y
+            _z=_z/s_z
+
+        else:
+            _x=_x/self.s_a
+            _y=_y/self.s_a
+            _z=_z/self.s_a        
+
+        return _x, _y, _z
+
+    def assign_value(self, tpms_grid, ds):
+        tpms_grid.grid = ds * self.m_v
+
+
 class Gyroid(TPMS):        
-    def apply_grid(self, tpms_grid, z = 0.0):
-        _x, _y, _z = self.get_idx_grid(tpms_grid, z)
+    def apply_grid(self, tpms_grid):
+        print("applying gyroid grid")
+        _x, _y, _z = self.get_values(tpms_grid)
 
         s_x, s_y, s_z = self.get_sin(_x, _y, _z)
         c_x, c_y, c_z = self.get_cos(_x, _y, _z)
@@ -42,11 +57,12 @@ class Gyroid(TPMS):
             s_y * c_z + 
             s_z * c_x
         )
-        self.save_to_grid(tpms_grid, ds)
+        
+        self.assign_value(tpms_grid, ds)
 
 class SchwarzD(TPMS):
-    def apply_grid(self, tpms_grid, z = 0.0):
-        _x, _y, _z = self.get_idx_grid(tpms_grid, z)
+    def apply_grid(self, tpms_grid):
+        _x, _y, _z = self.get_values(tpms_grid)
 
         s_x, s_y, s_z = self.get_sin(_x, _y, _z)
         c_x, c_y, c_z = self.get_cos(_x, _y, _z)
@@ -57,20 +73,22 @@ class SchwarzD(TPMS):
             c_x * s_y * c_z + 
             c_x * c_y * s_z
         )
-        self.save_to_grid(tpms_grid, ds)
+        
+        self.assign_value(tpms_grid, ds)
 
 class SchwarzP(TPMS):
-    def apply_grid(self, tpms_grid, z = 0.0):
-        _x, _y, _z = self.get_idx_grid(tpms_grid, z)
+    def apply_grid(self, tpms_grid):
+        _x, _y, _z = self.get_values(tpms_grid)
         
         c_x, c_y, c_z = self.get_cos(_x, _y, _z)
 
         ds = c_x + c_y + c_z
-        self.save_to_grid(tpms_grid, ds)
+        
+        self.assign_value(tpms_grid, ds)
 
 class Neovius(TPMS):
-    def apply_grid(self, tpms_grid, z = 0.0):
-        _x, _y, _z = self.get_idx_grid(tpms_grid, z)
+    def apply_grid(self, tpms_grid):
+        _x, _y, _z = self.get_values(tpms_grid)
 
         c_x, c_y, c_z = self.get_cos(_x, _y, _z)
 
@@ -78,11 +96,12 @@ class Neovius(TPMS):
             3.0 * c_x + c_y + c_z +
             4.0 * c_x * c_y * c_z
         )
-        self.save_to_grid(tpms_grid, ds)
+        
+        self.assign_value(tpms_grid, ds)
 
 class FischerKoch(TPMS):
-    def apply_grid(self, tpms_grid, z = 0.0):
-        _x, _y, _z = self.get_idx_grid(tpms_grid, z)
+    def apply_grid(self, tpms_grid):
+        _x, _y, _z = self.get_values(tpms_grid)
 
         c_2x, c_2y, c_2z = self.get_cos(2.0 * _x, 2.0 * _y, 2.0 * _z)
         s_x, s_y, s_z = self.get_sin(_x, _y, _z)
@@ -93,4 +112,5 @@ class FischerKoch(TPMS):
             c_2y * s_z * c_x +
             c_2y * s_x * c_y
         )
-        self.save_to_grid(tpms_grid, ds)
+        
+        self.assign_value(tpms_grid, ds)

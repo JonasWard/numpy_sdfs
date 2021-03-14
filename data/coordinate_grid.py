@@ -6,8 +6,8 @@ class CoordinateGrid():
         self.x_dim = x_dim
         self.y_dim = y_dim
 
-        self.x, self.y = [np_a for np_a in np.indices( (self.x_dim, self.y_dim), dtype = np.float64 )]
-        self.z = np.ones((self.x_dim, self.y_dim), dtype=np.float64)*z_value
+        self.x, self.y = [np_a for np_a in np.indices( (self.x_dim, self.y_dim), dtype = np.float16 )]
+        self.z = np.ones((self.x_dim, self.y_dim), dtype=np.float16)*z_value
 
         #centralize
         self.x-=self.x_dim * .5
@@ -40,7 +40,7 @@ class CoordinateGrid():
         a, b, c = c2 * c3, - c2 * s3, s2
         d, e, f = c1*s3 + c3*s1*s2, c1*c3 - s1*s2*s3, - c2*s1
         g, h, i = s1*s3 - c1*c3*s2, c3*s1 + c1*s2*s3, c1*c2
-        
+
         self.x, self.y, self.z = (
             self.x * a + self.y * b + self.y * c,
             self.x * d + self.y * e + self.y * f,

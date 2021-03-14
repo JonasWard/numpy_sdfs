@@ -1,11 +1,12 @@
 import numpy as np
-from coordinate_grid import *
+from data.coordinate_grid import *
+from vis.base_vis import vis_image_key_press, array_to_pseudocolor_range
 
 class TPMSGrid:
     def __init__(self, x_dim, y_dim, z_value=0., index_grid=None):
         self.x_dim = int(x_dim)
         self.y_dim = int(y_dim)
-        self.grid = np.zeros(shape = (x_dim, y_dim), dtype = np.float )
+        self.grid = np.zeros(shape = (x_dim, y_dim), dtype = np.float16 )
 
         if index_grid is None:
             self._idx_grid_state = "default"
@@ -45,7 +46,7 @@ class TPMSGrid:
 
     def apply_function(self, function):
         self._applied = True
-        self.x, self.y, self.z = function.apply_grid(self)
+        function.apply_grid(self)
 
     def get_domain(self):
         return np.min(self.grid), np.max(self.grid), np.mean(self.grid), np.median(self.grid)
@@ -56,13 +57,16 @@ class TPMSGrid:
         return n_grid
 
     def clone(self):
-        return TPMSGrid(self.x_dim, self.y_dim, self.idx_grid)
+        return TPMSGrid(self.x_dim, self.y_dim, index_grid=self.idx_grid)
 
     def get_values(self):
         if self._applied:
             return self.idx_grid.x, self.idx_grid.y, self.idx_grid.z
         else:
-            return self.x, self.y, self.z
+            return self.grid, self.grid, self.grid
+
+    def visualize(self):
+        vis_image_key_press(array_to_pseudocolor_range(self.grid))
 
     def __repr__(self):
         return "TPMSGrid with dimensions {} x {}".format(self.x_dim, self.y_dim)
