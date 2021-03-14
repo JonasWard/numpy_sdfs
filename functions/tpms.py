@@ -29,7 +29,7 @@ class TPMS:
 
         if isinstance(self.s_a, TPMSGrid):
             s_d = self.s_a.grid
-            
+
             _x*=s_d
             _y*=s_d
             _z*=s_d
@@ -61,8 +61,6 @@ class Gyroid(TPMS):
         
         self.assign_value(tpms_grid, ds)
 
-        return tpms_grid
-
 class SchwarzD(TPMS):
     def apply_grid(self, tpms_grid):
         _x, _y, _z = self.get_values(tpms_grid)
@@ -79,8 +77,6 @@ class SchwarzD(TPMS):
         
         self.assign_value(tpms_grid, ds)
 
-        return tpms_grid
-
 class SchwarzP(TPMS):
     def apply_grid(self, tpms_grid):
         _x, _y, _z = self.get_values(tpms_grid)
@@ -90,8 +86,6 @@ class SchwarzP(TPMS):
         ds = c_x + c_y + c_z
         
         self.assign_value(tpms_grid, ds)
-
-        return tpms_grid
 
 class Neovius(TPMS):
     def apply_grid(self, tpms_grid):
@@ -105,8 +99,6 @@ class Neovius(TPMS):
         )
         
         self.assign_value(tpms_grid, ds)
-
-        return tpms_grid
 
 class FischerKoch(TPMS):
     def apply_grid(self, tpms_grid):
@@ -123,5 +115,3 @@ class FischerKoch(TPMS):
         )
         
         self.assign_value(tpms_grid, ds)
-
-        return tpms_grid

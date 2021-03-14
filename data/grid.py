@@ -44,9 +44,13 @@ class TPMSGrid:
         elif isinstance(rotation, tuple):
             self.idx_grid.rotate_angles(b_pt=translation, angles=rotation)
 
+    def uv_map_coordinates(self, uv_function):
+        self.idx_grid.uv_map(uv_function)
+
     def apply_function(self, function):
         self._applied = True
         function.apply_grid(self)
+        return self
 
     def get_domain(self):
         return np.min(self.grid), np.max(self.grid), np.mean(self.grid), np.median(self.grid)
@@ -69,7 +73,9 @@ class TPMSGrid:
         vis_image_key_press(array_to_pseudocolor_range(self.grid))
 
     def __repr__(self):
-        return "TPMSGrid with dimensions {} x {}".format(self.x_dim, self.y_dim)
+        mn, mx, mean, med = self.get_domain()
+        return '\n'.join(["TPMSGrid with dimensions {} x {}".format(self.x_dim, self.y_dim),
+        " min_val: {}, max_val: {}, mean_val: {}, median_val: {}".format(mn, mx, mean, med)])
 
 if __name__ == "__main__":
     TPMSGrid(100, 100)
