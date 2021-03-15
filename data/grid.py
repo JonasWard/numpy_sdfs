@@ -1,40 +1,56 @@
 import numpy as np
+from data.coordinate_grid import *
+from vis.base_vis import vis_image_key_press, array_to_pseudocolor_range
 
 class TPMSGrid:
-    def __init__(self, x_dim, y_dim, index_grid = None):
+    def __init__(self, x_dim, y_dim, z_value=0., index_grid=None):
         self.x_dim = int(x_dim)
         self.y_dim = int(y_dim)
-        self.grid = np.zeros(shape = (x_dim, y_dim), dtype = np.float )
+        self.grid = np.zeros(shape = (x_dim, y_dim), dtype = np.float16 )
 
         if index_grid is None:
             self._idx_grid_state = "default"
-            self.idx_grid = np.indices( (self.x_dim, self.y_dim), dtype = np.float )
+            # by default the index grid is loaded in centrelized
+            self.idx_grid = CoordinateGrid(self.x_dim, self.y_dim, z_value)
         else:
             self._idx_grid_state = "cloned"
             self.idx_grid = index_grid
 
-    def transform_idx_grid(self, rotation = .25 * np.pi, translation = (.5, 0.0) ):
-        c = np.cos(rotation)
-        s = np.sin(rotation)
+        self._applied = False
 
-        x = translation[0] * self.x_dim
-        y = translation[1] * self.y_dim
+    @property
+    def applied(self):
+        return self._applied
 
-        print("translation : {}, {}".format(x, y) )
-        print("rotation    : {}, {}".format(c, s) )
+    def shift_to_corner(self, corner="top_right"):
+        if corner == "top_left":
+            x_mul, y_mul = -1., -1.
+        elif corner == "top_right":
+            x_mul, y_mul = 1., -1.
+        elif corner == "bottom_right":
+            x_mul, y_mul = 1., 1.
+        elif corner == "bottom_left":
+            x_mul, y_mul = -1., 1.
+        else:
+            x_mul, y_mul = 0., 0.
 
-        idx_grid_dup = []
-        idx_grid_dup.append( self.idx_grid[0] * c - self.idx_grid[1] * s )
-        idx_grid_dup.append( self.idx_grid[0] * s + self.idx_grid[1] * c )
+        self.idx_grid.translate(pt=(self.x_dim*(.5*x_mul), self.x_dim*(.5*y_mul), 0.))
 
-        self.idx_grid = idx_grid_dup
+    def transform_idx_grid(self, rotation = .25 * np.pi, translation = None ):
+        translation = (0,0,0) if translation is None else translation
 
-        self.idx_grid[0] -= x
-        self.idx_grid[1] -= y
+        if isinstance(rotation, float) or isinstance(rotation, int):
+            self.idx_grid.rotate_xy(b_pt=translation, angle=rotation)
+        elif isinstance(rotation, tuple):
+            self.idx_grid.rotate_angles(b_pt=translation, angles=rotation)
 
-        self._idx_grid_state = "transformed"
+    def uv_map_coordinates(self, uv_function):
+        self.idx_grid.uv_map(uv_function)
 
-        print("grid updated")
+    def apply_function(self, function):
+        self._applied = True
+        function.apply_grid(self)
+        return self
 
     def get_domain(self):
         return np.min(self.grid), np.max(self.grid), np.mean(self.grid), np.median(self.grid)
@@ -45,10 +61,21 @@ class TPMSGrid:
         return n_grid
 
     def clone(self):
-        return TPMSGrid(self.x_dim, self.y_dim, self.idx_grid)
+        return TPMSGrid(self.x_dim, self.y_dim, index_grid=self.idx_grid)
+
+    def get_values(self):
+        if self._applied:
+            return self.idx_grid.x, self.idx_grid.y, self.idx_grid.z
+        else:
+            return self.grid, self.grid, self.grid
+
+    def visualize(self):
+        vis_image_key_press(array_to_pseudocolor_range(self.grid))
 
     def __repr__(self):
-        return "TPMSGrid with dimensions {} x {}".format(self.x_dim, self.y_dim)
+        mn, mx, mean, med = self.get_domain()
+        return '\n'.join(["TPMSGrid with dimensions {} x {}".format(self.x_dim, self.y_dim),
+        " min_val: {}, max_val: {}, mean_val: {}, median_val: {}".format(mn, mx, mean, med)])
 
 if __name__ == "__main__":
     TPMSGrid(100, 100)
